@@ -72,6 +72,7 @@ class SolutionTest(unittest.TestCase):
         
         self.results_helper(f, inputs, expected_outputs)
         
+        
     def test_lengthOfLIS(self):
         sol = Solution()
         
@@ -86,6 +87,7 @@ class SolutionTest(unittest.TestCase):
         
         self.results_helper(f, inputs, expected_outputs)
         
+        
     def test_numDistict(self):
         sol = Solution()
         
@@ -98,5 +100,21 @@ class SolutionTest(unittest.TestCase):
         expected_outputs = [3, 5]
         
         f = lambda x : sol.numDistinct(x.s, x.t)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+    
+    def test_minInterval(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, intervals: List[List[int]], queries: List[int]):
+                self.intervals = intervals
+                self.queries = queries
+                
+        inputs = [Input(intervals = [[1,3],[2,3],[3,7],[6,6]], queries = [2,3,1,7,6,8])]
+        expected_outputs = [[2,2,3,5,1,-1]]
+        
+        f = lambda x: sol.minInterval(x.intervals, x.queries)
         
         self.results_helper(f, inputs, expected_outputs)

@@ -245,6 +245,7 @@ class Solution:
         
         return len(running_sequence)
     
+    
     def numDistinct(self, s: str, t: str) -> int:
         """You are given two strings s and t, both consisting of english letters.
         Return the number of distinct subsequences of s which are equal to t.
@@ -255,5 +256,49 @@ class Solution:
 
         Returns:
             int: number of subsequences of s which equal t
+        """
+        sols = [[0 for _ in range(len(s))] for _ in range(len(t))]
+        
+        # Base case - consider matching the first character of t from any character in s from range 0-j
+        if s[0] == t[0]:
+            sols[0][0] = 1
+        for j in range(1, len(s)):
+            if s[j] == t[0]:
+                sols[0][j] = 1 + sols[0][j-1]
+            else:
+                sols[0][j] = sols[0][j-1]
+                
+        # Now we build up via dynamic programming
+        for i in range(1, len(t)):
+            # How many ways to match t[:i+1] with subsequences in s[:j+1]?
+            for j in range(i, len(s)):
+                if t[i] == s[j]:
+                    # Try matching
+                    sols[i][j] = sols[i-1][j-1]
+                    # Try not matching
+                    sols[i][j] += sols[i][j-1]
+                else:
+                    # No choice but to not match
+                    sols[i][j] = sols[i][j-1]
+        
+        return sols[len(t)-1][len(s)-1]
+    
+    
+    def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:
+        """You are given a 2D integer array intervals, where intervals[i] = [left_i, right_i] represents the ith interval starting at left_i and ending at right_i (inclusive).
+        You are also given an integer array of query points queries. 
+        The result of query[j] is the length of the shortest interval i such that left_i <= queries[j] <= right_i. 
+        If no such interval exists, the result of this query is -1.
+
+        Return an array output where output[j] is the result of query[j].
+
+        Note: The length of an interval is calculated as right_i - left_i + 1.
+
+        Args:
+            intervals (List[List[int]]): list of intervals
+            queries (List[int]): list of queries
+
+        Returns:
+            List[int]: query results
         """
         pass
