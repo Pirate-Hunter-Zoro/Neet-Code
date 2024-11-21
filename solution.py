@@ -1,5 +1,6 @@
 from typing import List
-from pair import Pair
+from data_structures.heap import Heap
+from data_structures.pair import Pair
 
 class Solution:
     """Compilation of various solved problems
@@ -301,4 +302,76 @@ class Solution:
         Returns:
             List[int]: query results
         """
-        pass
+        results = [-1 for _ in queries]
+        
+        # We will need a heap for this, so we will use the following comparator
+        def compare(interval_1: list[int], interval_2: list[int]) -> bool:
+            """Helper function to compare two intervals
+
+            Args:
+                interval_1 (list[int]): first interval start and end times
+                interval_2 (list[int]): second interval start and end times
+
+            Returns:
+                int: result representing if the first interval should precede the second interval in a heap
+            """
+            first_length = interval_1[1] - interval_1[0]
+            second_length = interval_2[1] - interval_2[0]
+            first_end = interval_1[1]
+            second_end = interval_2[1]
+            if first_length < second_length:
+                return True
+            elif first_length > second_length:
+                return False
+            else:
+                return first_end < second_end
+        interval_heap = Heap(comparator=compare)
+            
+        # We now sort our intervals by starting time
+        intervals.sort(key=lambda interval: interval[0])
+        
+        # And sort our queries, but for purposes of the output remember original order
+        query_inidices = {}
+        for i, q in enumerate(queries):
+            if q not in query_inidices.keys():
+                query_inidices[q] = [i]
+            else:
+                query_inidices[q].append(i)
+        queries.sort()
+        
+        current_interval_idx = 0
+        query_value_results = {} # Map query value to respective index
+        # Now for each query, add all NEW intervals which have a starting time less than or equal to the 
+        for query in queries:
+            while current_interval_idx < len(intervals):
+                current_interval = intervals[current_interval_idx]
+                start = current_interval[0]
+                end = current_interval[1]
+                if start <= query and end >= query:
+                    # The query will fit in this interval
+                    interval_heap.push(val=current_interval)
+                    current_interval_idx += 1
+                elif start <= query:
+                    # Useless interval - won't fit in this query or any later query
+                    current_interval_idx += 1
+                else:
+                    # Won't fit with this query, but maybe with a future query
+                    break
+            # Find the first interval that works with this query, and don't pop it but pop all preceding
+            # If we run out of intervals, the result for this query is -1
+            while not interval_heap.empty():
+                next_interval = interval_heap.top()
+                if next_interval[0] <= query and next_interval[1] >= query:
+                    # This next smallest interval can accomodate the query - record the length of this interval for this query
+                    query_value_results[query] = next_interval[1] - next_interval[0] + 1
+                    break
+                else:
+                    # This interval was too early to fit the current query, and it won't fit any later queries
+                    interval_heap.pop()
+                    
+        # Now that we have our query results, we need to put the results back in the original order that the queries came in
+        for query, result in query_value_results.items():
+            for query_idx in query_inidices[query]:
+                results[query_idx] = result
+            
+        return results

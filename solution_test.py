@@ -112,8 +112,8 @@ class SolutionTest(unittest.TestCase):
                 self.intervals = intervals
                 self.queries = queries
                 
-        inputs = [Input(intervals = [[1,3],[2,3],[3,7],[6,6]], queries = [2,3,1,7,6,8])]
-        expected_outputs = [[2,2,3,5,1,-1]]
+        inputs = [Input(intervals = [[1,3],[2,3],[3,7],[6,6]], queries = [2,3,1,7,6,8]), Input(intervals=[[4,5],[5,8],[1,9],[8,10],[1,6]], queries=[7,9,3,9,3])]
+        expected_outputs = [[2,2,3,5,1,-1], [4,3,6,3,6]]
         
         f = lambda x: sol.minInterval(x.intervals, x.queries)
         
