@@ -1,4 +1,5 @@
 from typing import List
+from data_structures.disjoint_set import UnionFind
 from data_structures.heap import Heap
 from data_structures.pair import Pair
 
@@ -404,4 +405,31 @@ class Solution:
         Returns:
             int: weight of the minimum spanning tree
         """
-        pass
+        def compare_edges(first_edge: List[int], second_edge: List[int]) -> bool:
+            """Helper method to determine if the first edge is less than the second
+
+            Args:
+                first_edge (List[int]): first edge
+                second_edge (List[int]): second edge
+
+            Returns:
+                bool: whether the first edge is less than the second edge
+            """
+            return first_edge[2] < second_edge[2]
+        edge_heap = Heap(comparator=compare_edges)
+        for edge in edges:
+            edge_heap.push(edge)
+        
+        used_edges = 0
+        weight = 0
+        node_set = UnionFind(n=n)
+        while used_edges < n-1 and not edge_heap.empty():
+            next_edge = edge_heap.pop()
+            node_1 = next_edge[0]
+            node_2 = next_edge[1]
+            if not node_set.isSameComponent(x=node_1, y=node_2):
+                node_set.union(x=node_1, y=node_2)
+                weight += next_edge[2]
+                used_edges += 1
+        
+        return weight if used_edges == n-1 else -1

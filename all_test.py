@@ -149,3 +149,19 @@ class SolutionTest(unittest.TestCase):
         f = lambda x: sol.minInterval(x.intervals, x.queries)
         
         self.results_helper(f, inputs, expected_outputs)
+        
+    
+    def test_minimumSpanningTree(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, n:int, edges:List[List[int]]):
+                self.n = n
+                self.edges = edges
+                
+        inputs = [Input(n=5, edges=[[0,1,10], [0,2,3], [1,3,2], [2,1,4], [2,3,8], [2,4,2], [3,4,5]])]
+        expected_outputs = [11]
+        
+        f = lambda x: sol.minimumSpanningTree(n=x.n, edges=x.edges)
+        
+        self.results_helper(f, inputs, expected_outputs)
