@@ -1,6 +1,7 @@
 from typing import List
 import unittest
 
+from data_structures.disjoint_set import UnionFind
 from solution import Solution
 
 from typing import List
@@ -18,6 +19,19 @@ class SegmentTreeTest(unittest.TestCase):
         self.assertTrue(seg.query(L=2, R=4) == 12)
         seg.update(index=3, val=0)
         self.assertTrue(seg.query(L=2, R=4) == 8)
+
+
+class UnionFindTest(unittest.TestCase):
+    
+    
+    def test_disjoint_set_union(self):
+        disjoint_set = UnionFind(n=10)
+        
+        self.assertFalse(disjoint_set.isSameComponent(x=1, y=3))
+        self.assertTrue(disjoint_set.union(x=1, y=2))
+        self.assertTrue(disjoint_set.union(x=2, y=3))
+        self.assertEqual(disjoint_set.getNumComponents(), 8)
+        self.assertTrue(disjoint_set.isSameComponent(x=1, y=3))
 
 
 class SolutionTest(unittest.TestCase):

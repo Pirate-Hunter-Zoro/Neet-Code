@@ -375,3 +375,33 @@ class Solution:
                 results[query_idx] = result
             
         return results
+    
+    
+    def minimumSpanningTree(self, n: int, edges: List[List[int]]) -> int:
+        """Implement Kruskal's minimum spanning tree algorithm.
+
+        A Minimum Spanning Tree (MST) is a tree that spans all the vertices in a given weighted, undirected graph while minimizing the total edge weight and avoiding cycles. 
+        It connects all nodes with exactly ∣V∣−1 edges, where V is the set of vertices, and has the lowest possible sum of edge weights.
+
+        Kruskal's algorithm is a greedy algorithm that finds the MST of graph. 
+        It sorts all the edges from least weight to greatest, and iteratively adds edges to the MST, ensuring that each new edge doesn't form a cycle.
+
+        Objective:
+
+        Given a weighted, undirected graph, find the minimum spanning tree (MST) using Kruskal's algorithm and return its total weight. 
+        If the graph is not connected, the total weight of the minimum spanning tree should be -1.
+
+        Input:
+
+        n - the number of vertices in the graph, where (2 <= n <= 100). Each vertex is labeled from 0 to n - 1.
+        edges - a list of tuples, each representing an undirected edge in the form (u, v, w), where u and v are vertices connected by the edge, and w is the weight of the edge, where (1 <= w <= 10).
+        Note: If the graph is not connected, you should return -1.
+
+        Args:
+            n (int): number of nodes
+            edges (List[List[int]]): edges of the graph
+
+        Returns:
+            int: weight of the minimum spanning tree
+        """
+        pass
