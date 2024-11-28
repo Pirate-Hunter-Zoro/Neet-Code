@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 from data_structures.disjoint_set import UnionFind
 from data_structures.heap import Heap
 from data_structures.pair import Pair
@@ -461,4 +461,114 @@ class Solution:
         Returns:
             int: weight of minimum spanning tree
         """
-        pass
+        adjacency_list = [[] for _ in range(n)]
+        for edge in edges:
+            a = edge[0]
+            b = edge[1]
+            w = edge[2]
+            adjacency_list[a].append([b, w])
+            adjacency_list[b].append([a, w])
+            
+        def less(edge_1: List[int], edge_2: List[int]) -> bool:
+            """Compare two edges by weight
+
+            Args:
+                edge_1 (List[int]): first edge
+                edge_2 (List[int]): second edge
+
+            Returns:
+                bool: whether the first edge is less than the second edge
+            """
+            return edge_1[1] < edge_2[1]
+        edge_heap = Heap(comparator=less)
+            
+        seen_nodes = set([0])
+        for edge in adjacency_list[0]:
+            if edge[0] != 0: # no self loops allowed
+                edge_heap.push(edge)
+        weight = 0
+        while len(seen_nodes) < n and not edge_heap.empty():
+            # Repeatedly expand from the nodes we have seen thus far
+            next_edge = edge_heap.pop()
+            next_node = next_edge[0]
+            next_weight = next_edge[1]
+            if next_node not in seen_nodes:
+                seen_nodes.add(next_node)
+                weight += next_weight
+                for edge in adjacency_list[next_node]:
+                    if edge[0] not in seen_nodes:
+                        edge_heap.push(edge)
+            
+        if len(seen_nodes) < n:
+            return -1
+        else:
+            return weight
+        
+    def shortestPath(self, n: int, edges: List[List[int]], src: int) -> Dict[int, int]:
+        """Implement Dijkstra's shortest path algorithm.
+
+        Given a weighted, directed graph, and a starting vertex, return the shortest distance from the starting vertex to every vertex in the graph.
+
+        Input:
+
+        n - the number of vertices in the graph, where (2 <= n <= 100). Each vertex is labeled from 0 to n - 1.
+        edges - a list of tuples, each representing a directed edge in the form (u, v, w), where u is the source vertex, v is the destination vertex, and w is the weight of the edge, where (1 <= w <= 10).
+        src - the source vertex from which to start the algorithm, where (0 <= src < n).
+        Note: If a vertex is unreachable from the source vertex, the shortest path distance for the unreachable vertex should be -1.
+
+        Args:
+            n (int): number of nodes
+            edges (List[List[int]]): list of edges
+            src (int): source node
+
+        Returns:
+            Dict[int, int]: distance to all other vertices
+        """
+        distances = {}
+        distances[src] = 0
+        for i in range(0,n):
+            if i != src:
+                distances[i] = -1
+        
+        # We need edges
+        adjacency_list = [[] for _ in range(n)]
+        for edge in edges:
+            a = edge[0]
+            b = edge[1]
+            w = edge[2]
+            adjacency_list[a].append([b, w])
+            
+        # We need a heap of distances
+        def less(distance_1: List[int], distance_2: List[int]) -> bool:
+            """Compare two edges by weight
+
+            Args:
+                distance_1 (List[int]): first distance (total distance from node 0, this node)
+                distance_2 (List[int]): second edge (total distance from node 0, this node)
+
+            Returns:
+                bool: whether the first edge is less than the second edge
+            """
+            return distance_1[1] < distance_2[1]
+        distance_heap = Heap(comparator=less)
+        
+        # The round-1 iteration distances from src to all its neighbors is simply the edge weight
+        for edge in adjacency_list[src]:
+            distance_heap.push(edge)
+        
+        while not distance_heap.empty():
+            next_distance = distance_heap.pop()
+            node = next_distance[0]
+            new_distance_from_0 = next_distance[1]
+            old_distance_from_0 = distances[node]
+            if distances[node] != -1:
+                distances[node] = min(distances[node], new_distance_from_0)
+            else:
+                distances[node] = new_distance_from_0
+            if distances[node] != old_distance_from_0:
+                for edge in adjacency_list[node]:
+                    next_node = edge[0]
+                    weight = edge[1]
+                    distance_heap.push([next_node, distances[node] + weight])
+
+        return distances
