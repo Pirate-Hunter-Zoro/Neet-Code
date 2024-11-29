@@ -1,7 +1,8 @@
-from typing import List
+from typing import List, Optional
 import unittest
 
 from data_structures.disjoint_set import UnionFind
+from data_structures.tree_node import TreeNode
 from solution import Solution
 
 from typing import List
@@ -195,5 +196,20 @@ class SolutionTest(unittest.TestCase):
         expected_outputs = [{0:0, 1:7, 2:3, 3:9, 4:5}]
         
         f = lambda x : sol.shortestPath(n=x.n, edges=x.edges, src=x.src)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+    def test_maximumPathSum(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, root: Optional[TreeNode]):
+                self.root = root
+                
+        inputs = [Input(root=TreeNode(values=[1,2,3])), Input(root=TreeNode(values=[-15,10,20,None,None,15,5,-5]))]
+        
+        expected_outputs = [6, 40]
+        
+        f = lambda x : sol.maxPathSum(x.root)
         
         self.results_helper(f, inputs, expected_outputs)

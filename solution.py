@@ -1,7 +1,8 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 from data_structures.disjoint_set import UnionFind
 from data_structures.heap import Heap
 from data_structures.pair import Pair
+from data_structures.tree_node import TreeNode
 
 class Solution:
     """Compilation of various solved problems
@@ -572,3 +573,19 @@ class Solution:
                     distance_heap.push([next_node, distances[node] + weight])
 
         return distances
+    
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        """Given the root of a non-empty binary tree, return the maximum path sum of any non-empty path.
+        A path in a binary tree is a sequence of nodes where each pair of adjacent nodes has an edge connecting them. 
+        A node can not appear in the sequence more than once. 
+        The path does not necessarily need to include the root.
+
+        The path sum of a path is the sum of the node's values in the path.
+
+        Args:
+            root (Optional[TreeNode]): the tree node (which may be null)
+
+        Returns:
+            int: maximum path sum in the tree
+        """
+        pass
