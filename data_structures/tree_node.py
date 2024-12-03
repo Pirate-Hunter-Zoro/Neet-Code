@@ -18,14 +18,34 @@ class TreeNode:
                     self.left = TreeNode(val=values[1])
                 else:
                     current_level = [self]
-                    current_idx = 0
-                    while len(current_level) > 0:
+                    current_idx = 1
+                    while current_idx < len(values):
                         # We are still ready to make more layers
-                        current_level_idx = 0
-                        next_level_value_indices = range(current_idx + len(current_level), current_idx + len(current_level) + 2*len(current_level))
                         next_level = []
                         # Now to fill in the next depth of nodes
-                        
+                        for node in current_level:
+                            if node == None: 
+                                continue
+                            
+                            # Left child
+                            left_val = values[current_idx]
+                            if left_val != None:
+                                node.left = TreeNode(val=left_val)
+                            next_level.append(node.left)
+                            current_idx += 1
+                            
+                            # Right child
+                            if current_idx >= len(values):
+                                break
+                            else:
+                                right_val = values[current_idx]
+                                if right_val != None:
+                                    node.right = TreeNode(val=right_val)
+                                next_level.append(node.right)
+                                current_idx += 1
+                                
+                        # Onto the next layer
+                        current_level = next_level
         else:
             # Other way to initialize a tree node
             self.val = val
