@@ -601,18 +601,18 @@ class Solution:
             """
             if root.left == None and root.right == None:
                 # root node
-                return (root.val, max(0, root.val))
+                return (root.val, root.val)
             else:
                 if root.right == None:
                     # only left child
                     best_include_left, best_left = recMaxPathSum(root.left)
                     # now we can fill in this node's values
-                    return (root.val + max(0, best_include_left), max(best_left, max(0, root.val + max(0, best_include_left))))
+                    return (root.val + max(0, best_include_left), max(best_left, root.val + max(0, best_include_left)))
                 elif root.left == None:
                     # only right child
                     best_include_right, best_right = recMaxPathSum(root.right)
                     # now we can fill in this node's values
-                    return (root.val + max(0, best_include_right), max(best_right, max(0, root.val + max(0, best_include_right))))
+                    return (root.val + max(0, best_include_right), max(best_right, root.val + max(0, best_include_right)))
                 else:
                     # both children
                     best_include_left, best_left = recMaxPathSum(root.left)
@@ -622,7 +622,7 @@ class Solution:
                     include_with_subtree = root.val + max(0, max(best_include_left, best_include_right))
                     # or we need not include either subtree or even this root node, OR both subtrees
                     include_root = root.val + max(0, max(best_include_left + best_include_right, max(best_include_left, best_include_right)))
-                    no_include_root = max(0, max(best_left, best_right))
+                    no_include_root = max(best_left, best_right)
                     best_path = max(include_root, no_include_root)
                     return (include_with_subtree, best_path)
         _, best = recMaxPathSum(root)
