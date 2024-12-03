@@ -588,4 +588,42 @@ class Solution:
         Returns:
             int: maximum path sum in the tree
         """
-        pass
+        def recMaxPathSum(root: Optional[TreeNode]) -> tuple[int, int]:
+            """Return three things
+            - Result from including this root node and ONLY its best subtree (at most)
+            - Result from taking the true best path in the entire subtree of this node
+
+            Args:
+                root (Optional[TreeNode]): node we are talking about
+
+            Returns:
+                tuple[int, int, int]: tuple of said three results
+            """
+            if root.left == None and root.right == None:
+                # root node
+                return (root.val, max(0, root.val))
+            else:
+                if root.right == None:
+                    # only left child
+                    best_include_left, best_left = recMaxPathSum(root.left)
+                    # now we can fill in this node's values
+                    return (root.val + max(0, best_include_left), max(best_left, max(0, root.val + max(0, best_include_left))))
+                elif root.left == None:
+                    # only right child
+                    best_include_right, best_right = recMaxPathSum(root.right)
+                    # now we can fill in this node's values
+                    return (root.val + max(0, best_include_right), max(best_right, max(0, root.val + max(0, best_include_right))))
+                else:
+                    # both children
+                    best_include_left, best_left = recMaxPathSum(root.left)
+                    best_include_right, best_right = recMaxPathSum(root.right)
+                    # now we solve for this node
+                    # if we enforce including this node and at most one of its subtrees
+                    include_with_subtree = root.val + max(0, max(best_include_left, best_include_right))
+                    # or we need not include either subtree or even this root node, OR both subtrees
+                    include_root = root.val + max(0, max(best_include_left + best_include_right, max(best_include_left, best_include_right)))
+                    no_include_root = max(0, max(best_left, best_right))
+                    best_path = max(include_root, no_include_root)
+                    return (include_with_subtree, best_path)
+        _, best = recMaxPathSum(root)
+        return best
