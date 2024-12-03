@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Self
 
 
 class TreeNode:
@@ -33,16 +33,17 @@ class TreeNode:
                                 node.left = TreeNode(val=left_val)
                             next_level.append(node.left)
                             current_idx += 1
-                            
-                            # Right child
                             if current_idx >= len(values):
                                 break
-                            else:
-                                right_val = values[current_idx]
-                                if right_val != None:
-                                    node.right = TreeNode(val=right_val)
-                                next_level.append(node.right)
-                                current_idx += 1
+                            
+                            # Right child
+                            right_val = values[current_idx]
+                            if right_val != None:
+                                node.right = TreeNode(val=right_val)
+                            next_level.append(node.right)
+                            current_idx += 1
+                            if current_idx >= len(values):
+                                break
                                 
                         # Onto the next layer
                         current_level = next_level
@@ -51,3 +52,23 @@ class TreeNode:
             self.val = val
             self.left = left
             self.right = right
+            
+    def __eq__(self, other: Self) -> bool:
+        """Overloader for determining if this tree node is the same as the other
+
+        Args:
+            other (Self): other tree node
+        """
+        if other == None:
+            return False
+        elif type(other) != type(self):
+            return False
+        else:
+            if self.val != other.val:
+                return False
+            elif self.left != None and self.left != other.left:
+                return False
+            elif self.right != None and self.right != other.right:
+                return False
+            else:
+                return True
