@@ -1,5 +1,6 @@
 from typing import Optional
 
+from data_structures.linked_list import Stack
 from data_structures.tree_node import TreeNode
 
 
@@ -40,29 +41,34 @@ class Codec:
             return None
         else:
             first_child_idx = data.find("L")
-            first_paren_idx = data.find("(")
-            if first_paren_idx == -1:
+            first_parentheses_idx = data.find("(")
+            if first_parentheses_idx == -1:
                 # No child 
                 return TreeNode(val=int(data))
-            elif first_child_idx == -1 or first_child_idx > first_paren_idx:
+            elif first_child_idx == -1 or first_child_idx > first_parentheses_idx:
                 # No left child - only right child is present
                 # Format is R(...), where the ... is the right subtree
                 first_child_idx = data.find("R")
                 root = TreeNode(val=int(data[:first_child_idx]))
                 root.right = self.deserialize(data[first_child_idx+2:len(data)-1])
+                return root
             else:
                 # Left child present and MAYBE right child present
                 root = TreeNode(val=int(data[:first_child_idx]))
-                end_of_first_child_data = first_paren_idx
-                
-                right_child_idx = data.find("R")
-                if right_child_idx == -1 or right_child_idx > first_paren_idx:
-                    # Only left child
-                    # Format is L(...), where the ... is the left subtree
-                    root.left = self.deserialize(data=data[first_child_idx+2:len(data)-1])
-                else:
-                    # Both children present
-                    # Format is L(...)R(...), where each ... is a subtree
-                    root.left = self.deserialize(data=data[first_child_idx+2:right_child_idx-1])
-                    root.right = self.deserialize(data=data[right_child_idx+2:len(data)-1])
+                end_of_first_child_data = first_parentheses_idx
+                index_stack = Stack()
+                index_stack.push(end_of_first_child_data)
+                end_of_first_child_data += 1
+                while len(index_stack) > 0:
+                    next_char = data[end_of_first_child_data]
+                    if next_char == ")":
+                        index_stack.pop()
+                    elif next_char == "(":
+                        index_stack.push(end_of_first_child_data)
+                    end_of_first_child_data += 1
+                # Left child data bounds obtained
+                root.left = self.deserialize(data=data[first_parentheses_idx+1:end_of_first_child_data-1])
+                if end_of_first_child_data < len(data):
+                    # There is a right child too
+                    root.right = self.deserialize(data=data[end_of_first_child_data+2:len(data)-1])
                 return root

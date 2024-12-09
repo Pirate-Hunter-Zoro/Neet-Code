@@ -64,11 +64,22 @@ class TreeNode:
         elif type(other) != type(self):
             return False
         else:
-            if self.val != other.val:
+            return self.__equals(other=other)
+    
+    def __equals(self, other:Self) -> bool:
+        if self.val != other.val:
+            return False
+        elif self.left == None and other.left != None:
+            return False
+        elif self.right == None and other.right != None:
+            return False
+        elif other.left == None and self.left != None:
+            return False
+        elif other.right == None and self.right != None:
+            return False
+        else:
+            if self.left != None and not self.left.__equals(other.left):
                 return False
-            elif self.left != None and self.left != other.left:
+            if self.right != None and not self.right.__equals(other.right):
                 return False
-            elif self.right != None and self.right != other.right:
-                return False
-            else:
-                return True
+            return True
