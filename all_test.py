@@ -297,6 +297,7 @@ class SolutionTest(unittest.TestCase):
         f = lambda x : sol.maxCoins(nums=x.nums)
         
         self.results_helper(f, inputs, expected_outputs)
+       
         
     def test_ladderLength(self):
         sol = Solution()
@@ -312,5 +313,21 @@ class SolutionTest(unittest.TestCase):
         expected_outputs = [4, 0]
         
         f = lambda x : sol.ladderLength(beginWord=x.beginWord, endWord=x.endWord, wordList=x.wordList)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+    
+    def test_findItinerary(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, tickets: List[List[str]]):
+                self.tickets = tickets
+                
+        inputs = [Input(tickets = [["BUF","HOU"],["HOU","SEA"],["JFK","BUF"]]), Input(tickets = [["HOU","JFK"],["SEA","JFK"],["JFK","SEA"],["JFK","HOU"]])]
+        
+        expected_outputs = [["JFK","BUF","HOU","SEA"], ["JFK","HOU","JFK","SEA","JFK"]]
+        
+        f = lambda x : sol.findItinerary(tickets=x.tickets)
         
         self.results_helper(f, inputs, expected_outputs)

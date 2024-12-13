@@ -3,6 +3,7 @@ from data_structures.disjoint_set import UnionFind
 from data_structures.heap import Heap
 from data_structures.pair import Pair
 from data_structures.tree_node import TreeNode
+from data_structures.linked_list import Queue
 
 class Solution:
     """Compilation of various solved problems
@@ -706,5 +707,63 @@ class Solution:
 
         Returns:
             int: minimum number of words needed for transformation
+        """
+        class WordNode:
+            def __init__(self, word: str):
+                self.word = word
+                self.visited = False
+                self.connections = []
+                self.depth = 1
+                
+        graph = {}
+        words = wordList
+        words.append(beginWord)
+        # Note that because our graph is a hash map, any duplicates in words will not result in duplicate nodes
+        for word in words:
+            if word not in graph.keys():
+                graph[word] = WordNode(word)
+        
+        unique_words = [word for word in graph.keys()]
+        # Now look at every possible pair and see if they are connected in our underlying graph
+        for i in range(len(unique_words)):
+            word_1 = unique_words[i]
+            for j in range(i+1, len(unique_words)):
+                word_2 = unique_words[j]
+                differences = sum([1 if word_1[i] != word_2[i] else 0 for i in range(len(word_1))])
+                if differences == 1:
+                    graph[word_1].connections.append(graph[word_2])
+                    graph[word_2].connections.append(graph[word_1])
+        
+        # Now we perform breadth-first-search
+        node_queue = Queue()
+        node_queue.push(graph[beginWord])
+        while len(node_queue) > 0:
+            next = node_queue.pop()
+            if next.word == endWord:
+                return next.depth
+            else:
+                for word_node in next.connections:
+                    if not word_node.visited:
+                        word_node.visited = True
+                        word_node.depth = next.depth + 1
+                        node_queue.push(word_node)
+                        
+        return 0
+    
+    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
+        """You are given a list of flight tickets tickets where tickets[i] = [from_i, to_i] represent the source airport and the destination airport.
+        Each from_i and to_i consists of three uppercase English letters.
+        Reconstruct the itinerary in order and return it.
+        All of the tickets belong to someone who originally departed from "JFK". 
+        Your objective is to reconstruct the flight path that this person took, assuming each ticket was used exactly once.
+        If there are multiple valid flight paths, return the lexicographically smallest one.
+        For example, the itinerary ["JFK", "SEA"] has a smaller lexical order than ["JFK", "SFO"].
+        You may assume all the tickets form at least one valid flight path.
+
+        Args:
+            tickets (List[List[str]]): list of flight tickets
+
+        Returns:
+            List[str]: sequence of visited cities
         """
         pass
