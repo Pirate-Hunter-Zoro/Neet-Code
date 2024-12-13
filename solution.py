@@ -627,3 +627,84 @@ class Solution:
                     return (include_with_subtree, best_path)
         _, best = recMaxPathSum(root)
         return best
+    
+    def maxCoins(self, nums: List[int]) -> int:
+        """You are given an array of integers nums of size n. 
+        The ith element represents a balloon with an integer value of nums[i]. 
+        You must burst all of the balloons.
+        If you burst the ith balloon, you will receive nums[i - 1] * nums[i] * nums[i + 1] coins. 
+        If i - 1 or i + 1 goes out of bounds of the array, then assume the out of bounds value is 1.
+        
+        Return the maximum number of coins you can receive by bursting all of the balloons.
+
+        Args:
+            nums (List[int]): balloon values
+
+        Returns:
+            int: maximum number of coins that can be earned
+        """
+        # We need to make the decision - what's the LAST balloon to pop?
+        # [b1, b2, b3, b4, ..., bn]
+        # Subproblem defined as (left-end, right-end, start-idx, end-idx)
+        sols = {}
+        def topDownMaxCoins(left_val: int, right_val: int, start_idx: int, end_idx: int) -> int:
+            """Helper method to solve the burst balloons problem
+
+            Args:
+                left_val (int): value of the balloon on the left side of our range of balloons we will pop
+                right_val (int): value of the balloon on the right side of our range of balloons we will pop
+                start_idx (int): left index of range of balloons to pop
+                end_idx (int): right index of range of balloons to pop
+
+            Returns:
+                int: maximum coins we can achieve if we pop the range of balloons optimally with the given left and right-side values
+            """
+            # See if we need to solve the problem or if we have already solved it
+            if left_val not in sols.keys():
+                sols[left_val] = {}
+            if right_val not in sols[left_val].keys():
+                sols[left_val][right_val] = {}
+            if start_idx not in sols[left_val][right_val].keys():
+                sols[left_val][right_val][start_idx] = {}
+            if end_idx not in sols[left_val][right_val][start_idx].keys():
+                # Here is where we will solve the problem
+                if end_idx == start_idx:
+                    # Only one balloon - base case
+                    sols[left_val][right_val][start_idx][end_idx] = nums[start_idx] * left_val * right_val
+                else:
+                    # Not a base case
+                    record = -1
+                    for i in range(start_idx, end_idx+1):
+                        # See what the best balloon to leave last for popping is
+                        result = left_val*nums[i]*right_val
+                        if i > start_idx:
+                            # Optimally pop the left
+                            result += topDownMaxCoins(left_val=left_val, right_val=nums[i], start_idx=start_idx, end_idx=i-1)
+                        if i < end_idx:
+                            # Optimally pop the right
+                            result += topDownMaxCoins(left_val=nums[i], right_val=right_val, start_idx=i+1, end_idx=end_idx)
+                        record = max(record, result)
+                    sols[left_val][right_val][start_idx][end_idx] = record
+            
+            return sols[left_val][right_val][start_idx][end_idx]
+        
+        return topDownMaxCoins(1, 1, 0, len(nums)-1)
+    
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        """You are given two words, beginWord and endWord, and also a list of words wordList. 
+        All of the given words are of the same length, consisting of lowercase English letters, and are all distinct.
+        
+        Your goal is to transform beginWord into endWord by following the rules:
+        - You may transform beginWord to any word within wordList, provided that at exactly one position the words have a different character, and the rest of the positions have the same characters.
+        - You may repeat the previous step with the new word that you obtain, and you may do this as many times as needed.
+        - Return the minimum number of words within the transformation sequence needed to obtain the endWord, or 0 if no such sequence exists.
+
+        Args:
+            beginWord (str): starting word
+            endWord (str): word to transform the starting word into
+            wordList (List[str]): list of words to change into to reach the end word
+
+        Returns:
+            int: minimum number of words needed for transformation
+        """
+        pass

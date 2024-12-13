@@ -282,3 +282,35 @@ class SolutionTest(unittest.TestCase):
         f = lambda x : sol.maxPathSum(x.root)
         
         self.results_helper(f, inputs, expected_outputs)
+        
+    def test_maxCoins(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, nums: List[int]):
+                self.nums = nums
+                
+        inputs = [Input([4,2,3,7])]
+        
+        expected_outputs = [143]
+        
+        f = lambda x : sol.maxCoins(nums=x.nums)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+    def test_ladderLength(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, beginWord: str, endWord: str, wordList: List[str]):
+                self.beginWord = beginWord
+                self.endWord = endWord
+                self.wordList = wordList
+                
+        inputs = [Input(beginWord = "cat", endWord = "sag", wordList = ["bat","bag","sag","dag","dot"]), Input(beginWord = "cat", endWord = "sag", wordList = ["bat","bag","sat","dag","dot"])]
+        
+        expected_outputs = [4, 0]
+        
+        f = lambda x : sol.ladderLength(beginWord=x.beginWord, endWord=x.endWord, wordList=x.wordList)
+        
+        self.results_helper(f, inputs, expected_outputs)
