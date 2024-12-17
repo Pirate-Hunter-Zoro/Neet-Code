@@ -766,4 +766,62 @@ class Solution:
         Returns:
             List[str]: sequence of visited cities
         """
+        adjacency_list = {}
+        # Each node gets a heap of connections (going by alphabetical order)
+        for ticket in tickets:
+            src = ticket[0]
+            dst = ticket[1]
+            if src not in adjacency_list.keys():
+                adjacency_list[src] = []
+            adjacency_list[src].append(dst)
+        for neighbors in adjacency_list.values():
+            neighbors.sort()
+                
+        def recFindItinerary(current: str, num_edges_used: int, current_itinerary: list[str]):
+            """Helper method to recursively build up the itinerary from the current node
+
+            Args:
+                current (str): current city
+                num_edges_used (int): number of edges used so far
+                current_itinerary: list of cities progressed so far
+
+            Returns:
+                list[str]: resulting itinerary from this point
+            """
+            current_itinerary.append(current)
+            if num_edges_used < len(tickets):
+                # Non base case
+                successful = False
+                if current in adjacency_list.keys():
+                    # We have neighbors to explore
+                    for i in range(len(adjacency_list[current])):
+                        neighbor = adjacency_list[current][i]
+                        adjacency_list[current].remove(neighbor)
+                        recFindItinerary(current=neighbor, num_edges_used=num_edges_used+1, current_itinerary=current_itinerary)
+                        successful = len(current_itinerary) == len(tickets)+1
+                        if successful:
+                            break
+                        else:
+                            adjacency_list[current].insert(i, neighbor)
+                if not successful:
+                    # Remove this current node from the itinerary
+                    current_itinerary.pop()
+        
+        itinerary = []
+        recFindItinerary(current="JFK", num_edges_used=0, current_itinerary=itinerary)
+        return itinerary
+    
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        """You are given a square 2-D matrix of distinct integers grid where each integer grid[i][j] represents the elevation at position (i, j).
+        Rain starts to fall at time = 0, which causes the water level to rise. 
+        At time t, the water level across the entire grid is t.
+        You may swim either horizontally or vertically in the grid between two adjacent squares if the original elevation of both squares is less than or equal to the water level at time t.
+        Starting from the top left square (0, 0), return the minimum amount of time it will take until it is possible to reach the bottom right square (n - 1, n - 1).
+
+        Args:
+            grid (List[List[int]]): elevated position map
+
+        Returns:
+            int: minimum time it will take to reach the bottom right square
+        """
         pass

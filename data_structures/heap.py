@@ -12,6 +12,9 @@ class Heap:
         self.__underlying_array = []
         self.__comparator = comparator
 
+    def __len__(self) -> int:
+        return len(self.__underlying_array)
+
     def empty(self) -> bool:
         return len(self.__underlying_array) == 0
 

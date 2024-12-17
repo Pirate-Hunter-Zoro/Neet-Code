@@ -324,10 +324,35 @@ class SolutionTest(unittest.TestCase):
             def __init__(self, tickets: List[List[str]]):
                 self.tickets = tickets
                 
-        inputs = [Input(tickets = [["BUF","HOU"],["HOU","SEA"],["JFK","BUF"]]), Input(tickets = [["HOU","JFK"],["SEA","JFK"],["JFK","SEA"],["JFK","HOU"]])]
+        inputs = [Input(tickets = [["BUF","HOU"],["HOU","SEA"],["JFK","BUF"]]), 
+                  Input(tickets = [["HOU","JFK"],["SEA","JFK"],["JFK","SEA"],["JFK","HOU"]]), 
+                  Input(tickets=[["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]),
+                  Input(tickets=[["JFK","KUL"],["JFK","NRT"],["NRT","JFK"]])]
         
-        expected_outputs = [["JFK","BUF","HOU","SEA"], ["JFK","HOU","JFK","SEA","JFK"]]
+        expected_outputs = [["JFK","BUF","HOU","SEA"], 
+                            ["JFK","HOU","JFK","SEA","JFK"],
+                            ["JFK","ATL","JFK","SFO","ATL","SFO"],
+                            ["JFK","NRT","JFK","KUL"]]
         
         f = lambda x : sol.findItinerary(tickets=x.tickets)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+    def test_swimInWater(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, grid: List[List[int]]):
+                self.grid = grid
+                
+        inputs = [Input(grid = [[0,1],[2,3]]), 
+                  Input(grid = [[0,1,2,10],
+                                [9,14,4,13],
+                                [12,3,8,15],
+                                [11,5,7,6]]),]
+        
+        expected_outputs = [3, 8]
+        
+        f = lambda x : sol.swimInWater(x.grid)
         
         self.results_helper(f, inputs, expected_outputs)
