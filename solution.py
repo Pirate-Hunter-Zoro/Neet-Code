@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Self
 from data_structures.disjoint_set import UnionFind
 from data_structures.heap import Heap
 from data_structures.pair import Pair
@@ -823,5 +823,64 @@ class Solution:
 
         Returns:
             int: minimum time it will take to reach the bottom right square
+        """
+        # This appears to be a modified djikstra's algorithm where the weight of the path is the maximum along the path rather than the sum of edge weights
+        class GridSpace:
+            def __init__(self, row: int, col: int, wait_time: int):
+                self.row = row
+                self.col = col
+                self.wait_time = wait_time
+                self.path_wait_time = 1000000
+                                
+            def __lt__(self, other: Self):
+                return self.path_wait_time < other.path_wait_time
+            
+            def __gt__(self, other: Self):
+                return self.path_wait_time > other.path_wait_time
+        
+        spaces = [[GridSpace(row=i, col=j, wait_time=grid[i][j]) for j in range(len(grid[0]))] for i in range(len(grid))]
+        spaces[0][0].path_wait_time = spaces[0][0].wait_time
+        
+        grid_space_heap = Heap()
+        grid_space_heap.push(spaces[0][0])
+        while not grid_space_heap.empty():
+            next = grid_space_heap.pop()
+            if next.row == len(grid)-1 and next.col == len(grid)-1:
+                break
+            else:
+                neighbors = []
+                if next.row > 0:
+                    neighbors.append(spaces[next.row-1][next.col])
+                if next.row < len(grid)-1:
+                    neighbors.append(spaces[next.row+1][next.col])
+                if next.col > 0:
+                    neighbors.append(spaces[next.row][next.col-1])
+                if next.col < len(grid)-1:
+                    neighbors.append(spaces[next.row][next.col+1])
+                
+                for neighbor in neighbors:
+                    new_neighbor_path_time = min(neighbor.path_wait_time, max(next.path_wait_time, neighbor.wait_time))
+                    if new_neighbor_path_time < neighbor.path_wait_time:
+                        # The neighbor will get updated - add them to the heap
+                        neighbor.path_wait_time = new_neighbor_path_time
+                        grid_space_heap.push(neighbor)
+        
+        return spaces[len(spaces)-1][len(spaces)-1].path_wait_time
+    
+    def foreignDictionary(self, words: List[str]) -> str:
+        """There is a foreign language which uses the latin alphabet, but the order among letters is not "a", "b", "c" ... "z" as in English.
+        You receive a list of non-empty strings words from the dictionary, where the words are sorted lexicographically based on the rules of this new language.
+        Derive the order of letters in this language. 
+        If the order is invalid, return an empty string. 
+        If there are multiple valid order of letters, return any of them.
+        A string a is lexicographically smaller than a string b if either of the following is true:
+        - The first letter where they differ is smaller in a than in b.
+        - There is no index i such that a[i] != b[i] and a.length < b.length.
+
+        Args:
+            words (List[str]): list of words sorted according to new rules
+
+        Returns:
+            str: string describing the order of letters
         """
         pass

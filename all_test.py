@@ -338,6 +338,7 @@ class SolutionTest(unittest.TestCase):
         
         self.results_helper(f, inputs, expected_outputs)
         
+        
     def test_swimInWater(self):
         sol = Solution()
         
@@ -354,5 +355,21 @@ class SolutionTest(unittest.TestCase):
         expected_outputs = [3, 8]
         
         f = lambda x : sol.swimInWater(x.grid)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+        
+    def test_foreignDictionary(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, words:List[str]):
+                self.words = words
+                
+        inputs = [Input(words=["z","o"]), Input(words=["hrn","hrf","er","enn","rfnn"])]
+        
+        expected_outputs = ["zo", "hernf"]
+        
+        f = lambda x : sol.foreignDictionary(words=x.words)
         
         self.results_helper(f, inputs, expected_outputs)
