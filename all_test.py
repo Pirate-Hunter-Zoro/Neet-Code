@@ -109,7 +109,8 @@ class SolutionTest(unittest.TestCase):
     
     def results_helper(self, f, inputs: List[any], expected_outputs: List[any]):
         for input, output in zip(inputs, expected_outputs):
-            self.assertTrue(f(input) == output)
+            result = f(input)
+            self.assertTrue(result == output)
 
 
     def test_topologicalSort(self):
@@ -366,10 +367,31 @@ class SolutionTest(unittest.TestCase):
             def __init__(self, words:List[str]):
                 self.words = words
                 
-        inputs = [Input(words=["z","o"]), Input(words=["hrn","hrf","er","enn","rfnn"])]
+        inputs = [Input(words=["z","o"]), Input(words=["hrn","hrf","er","enn","rfnn"]), Input(words=["wrtkj","wrt"])]
         
-        expected_outputs = ["zo", "hernf"]
+        expected_outputs = ["zo", "hernf", ""]
         
         f = lambda x : sol.foreignDictionary(words=x.words)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+        
+    def test_findCheapestFlights(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, n: int, flights: List[List[int]], src: int, dst: int, k: int):
+                self.n = n
+                self.flights = flights
+                self.src = src
+                self.dst = dst
+                self.k = k
+                
+        inputs = [Input(n = 4, flights = [[0,1,200],[1,2,100],[1,3,300],[2,3,100]], src = 0, dst = 3, k = 1),
+                  Input(n = 3, flights = [[1,0,100],[1,2,200],[0,2,100]], src = 1, dst = 2, k = 1)]
+        
+        expected_outputs = [500, 200]
+        
+        f = lambda x : sol.findCheapestPrice(x.n, x.flights, x.src, x.dst, x.k)
         
         self.results_helper(f, inputs, expected_outputs)

@@ -883,4 +883,80 @@ class Solution:
         Returns:
             str: string describing the order of letters
         """
+        # First we will map each character to a digit, and vice versa
+        char_to_int = {}
+        int_to_char = {}
+        for word in words:
+            for i in range(len(word)):
+                char = word[i]
+                if char not in char_to_int.keys():
+                    char_to_int[char] = len(char_to_int)
+                    int_to_char[len(char_to_int)-1] = char
+                    
+        connections = []   
+        invalid = [False]
+        def make_connections(start: int, end: int, idx: int):
+            chars_at_level = []
+            char_ranges = {}
+            last_char = None
+            for i in range(start, end):
+                word = words[i]
+                if idx < len(word):
+                    char = word[idx]
+                    if len(chars_at_level) == 0 or chars_at_level[len(chars_at_level)-1] != char:
+                        chars_at_level.append(char)
+                        char_ranges[char] = [i]
+                        if i > start and last_char != None:
+                            char_ranges[last_char].append(i)
+                        last_char = char
+                    if i == end-1:
+                        char_ranges[char].append(end)
+                else:
+                    if last_char != None:
+                        invalid[0] = True
+            
+            for index_range in char_ranges.values():
+                if len(index_range) == 2:
+                    make_connections(start=index_range[0], end=index_range[1], idx=idx+1)
+                
+            for i in range(len(chars_at_level)-1, 0, -1):
+                char = chars_at_level[i]
+                lower_char = chars_at_level[i-1]
+                connections.append([char_to_int[char], char_to_int[lower_char]])
+                
+        make_connections(start=0, end=len(words), idx=0)
+        if invalid[0]:
+            return ""
+        
+        result = ""
+        reverse_alphabet = self.topologicalSort(n=len(char_to_int), edges=connections)
+        # Now reverse the reverse alphabet
+        for i in range(len(reverse_alphabet)-1, -1, -1):
+            result += int_to_char[reverse_alphabet[i]]
+        
+        return result
+    
+    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
+        """There are n airports, labeled from 0 to n - 1, which are connected by some flights. 
+        You are given an array flights where flights[i] = [from_i, to_i, price_i] represents a one-way flight from airport from_i to airport to_i with cost price_i. 
+        You may assume there are no duplicate flights and no flights from an airport to itself.
+        
+        You are also given three integers src, dst, and k where:
+        - src is the starting airport
+        - dst is the destination airport
+        - src != dst
+        - k is the maximum number of stops you can make (not including src and dst)
+        
+        Return the cheapest price from src to dst with at most k stops, or return -1 if it is impossible.
+
+        Args:
+            n (int): number of airports
+            flights (List[List[int]]): list of flights with source, destination, and cost
+            src (int): starting location
+            dst (int): desired ending location
+            k (int): maximum allowed stops
+
+        Returns:
+            int: cheapest price possible using at most k stops
+        """
         pass
