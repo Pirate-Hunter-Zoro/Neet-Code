@@ -959,4 +959,50 @@ class Solution:
         Returns:
             int: cheapest price possible using at most k stops
         """
+        # Create an adjacency list
+        graph = [[] for _ in range(n)]
+        for flight in flights:
+            depart_location = flight[0]
+            arrive_location = flight[1]
+            price = flight[2]
+            graph[depart_location].append([arrive_location, price])
+        
+        # Now perform BFS
+        record = 2000 * (k+1)
+        stops = 0
+        bfs_queue = Queue()
+        # Each 'record' pushed onto the queue records the location ended up at for this record, and the price
+        bfs_queue.push([src, 0])
+        while len(bfs_queue) > 0 and stops <= k:
+            num_to_dequeue = len(bfs_queue)
+            for _ in range(num_to_dequeue):
+                next = bfs_queue.pop()
+                location = next[0]
+                cost = next[1]
+                for connection in graph[location]:
+                    next_location = connection[0]
+                    flight_cost = connection[1]
+                    cost_to_next_location = cost + flight_cost
+                    if next_location == dst:
+                        record = min(record, cost_to_next_location)
+                    else:
+                        bfs_queue.push([next_location, cost_to_next_location])
+            stops += 1
+        
+        return record if record < 2000 * (k+1) else -1
+    
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        """The n-queens puzzle is the problem of placing n queens on an n x n chessboard so that no two queens can attack each other.
+        A queen in a chessboard can attack horizontally, vertically, and diagonally.
+        Given an integer n, return all distinct solutions to the n-queens puzzle.
+        Each solution contains a unique board layout where the queen pieces are placed. 
+        'Q' indicates a queen and '.' indicates an empty space.
+        You may return the answer in any order.
+
+        Args:
+            n (int): number of queens and board size
+
+        Returns:
+            List[List[str]]: all possible arrangements of queens such that they cannot attack each other
+        """
         pass

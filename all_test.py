@@ -395,3 +395,19 @@ class SolutionTest(unittest.TestCase):
         f = lambda x : sol.findCheapestPrice(x.n, x.flights, x.src, x.dst, x.k)
         
         self.results_helper(f, inputs, expected_outputs)
+        
+    
+    def test_solveNQueens(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, n: int):
+                self.n = n
+                
+        inputs = [Input(n=4), Input(n=1)]
+        
+        expected_outputs = [[[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]], ["Q"]]
+        
+        f = lambda x : sol.solveNQueens(n=x.n)
+        
+        self.results_helper(f, inputs, expected_outputs)
