@@ -411,3 +411,19 @@ class SolutionTest(unittest.TestCase):
         f = lambda x : sol.solveNQueens(n=x.n)
         
         self.results_helper(f, inputs, expected_outputs)
+        
+        
+    def test_maxProfit(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, prices: List[int]):
+                self.prices = prices
+                
+        inputs = [Input(prices = [1,3,4,0,4]), Input(prices = [1])]
+        
+        expected_outputs = [6, 0]
+        
+        f = lambda x : sol.maxProfit(prices=x.prices)
+        
+        self.results_helper(f, inputs, expected_outputs)

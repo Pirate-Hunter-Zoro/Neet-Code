@@ -1006,3 +1006,40 @@ class Solution:
             List[List[str]]: all possible arrangements of queens such that they cannot attack each other
         """
         pass
+    
+    def maxProfit(self, prices: List[int]) -> int:
+        """You are given an integer array prices where prices[i] is the price of NeetCoin on the ith day.
+        
+        You may buy and sell one NeetCoin multiple times with the following restrictions:
+        - After you sell your NeetCoin, you cannot buy another one on the next day (i.e., there is a cooldown period of one day).
+        - You may only own at most one NeetCoin at a time.
+        - You may complete as many transactions as you like.
+        
+        Return the maximum profit you can achieve.
+
+        Args:
+            prices (List[int]): list of stock prices on each day
+
+        Returns:
+            int: maximum profit achievable
+        """
+        n = len(prices)
+        # Max profit achievable from here given need to buy
+        sol = [-1 for _ in prices]
+        # Max profit achievable from here given need to sell
+        sell = [-1 for _ in prices]
+        
+        # Base cases
+        sol[n-1] = 0
+        sell[n-1] = prices[n-1] # Since prices will be stictly positive
+        
+        for i in range(n-2, -1, -1):
+            price = prices[i]
+            
+            # If we need to buy from here, try buying, and try not buying
+            sol[i] = max(sell[i+1] - price, sol[i+1])
+            
+            # If we need to sell from here, try selling now, and try selling later
+            sell[i] = max(price + (sol[i+2] if i<n-2 else 0), sell[i+1])
+        
+        return sol[0]
