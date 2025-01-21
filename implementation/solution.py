@@ -4,7 +4,7 @@ from implementation.disjoint_set import UnionFind
 from implementation.heap import Heap
 from implementation.pair import Pair
 from implementation.tree_node import TreeNode
-from implementation.linked_list import Queue
+from implementation.linked_list import Queue, Stack
 from implementation.linked_list import ListNode
 
 class Solution:
@@ -1626,4 +1626,23 @@ class Solution:
         Returns:
             int: amount of water trapped
         """
-        pass
+        block_stack = Stack()
+        water = 0
+        for i,h in enumerate(height):
+            second_tallest = 0
+            while len(block_stack) > 0 and block_stack.peek()[1] < h:
+                prev_block = block_stack.pop()
+                prev_posn = prev_block[0]
+                prev_height = prev_block[1]
+                water += (prev_height-second_tallest) * (i - prev_posn - 1)
+                second_tallest = prev_height
+            if len(block_stack) > 0 and block_stack.peek()[1] == h:
+                # equal height block removed from stack
+                water += (h - second_tallest) * (i - block_stack.pop()[0] - 1)
+                second_tallest = h
+            if len(block_stack) > 0:
+                # ran into a taller block which stays on stack
+                water += (h - second_tallest) * (i - block_stack.peek()[0] - 1)
+            block_stack.push([i,h])
+        
+        return water
