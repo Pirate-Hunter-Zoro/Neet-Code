@@ -577,3 +577,52 @@ class SolutionTest(unittest.TestCase):
         f = lambda x : sol.trap(height=x.height)
         
         self.results_helper(f, inputs, expected_outputs)
+        
+
+    def test_largestRectangleArea(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, heights: List[int]):
+                self.heights = heights
+        
+        inputs = [Input(heights = [7,1,7,2,2,4]), Input(heights = [1,3,7])]
+        
+        expected_outputs = [8,7]
+        
+        f = lambda x : sol.largestRectangleArea(heights=x.heights)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+        
+    def test_longestIncreasingPath(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, matrix: List[List[int]]):
+                self.matrix = matrix
+                
+        inputs = [Input(matrix = [[5,5,3],[2,3,6],[1,1,1]]), Input(matrix = [[1,2,3],[2,1,4],[7,6,5]])]
+        
+        expected_outputs = [4, 7]
+        
+        f = lambda x : sol.longestIncreasingPath(matrix=x.matrix)
+        
+        self.results_helper(f, inputs, expected_outputs)
+        
+        
+    def test_isMatch(self):
+        sol = Solution()
+        
+        class Input:
+            def __init__(self, s: str, p: str):
+                self.s = s
+                self.p = p
+                
+        inputs = [Input(s = "aa", p = ".b"), Input(s = "nnn", p = "n*"), Input(s = "xyz", p = ".*z")]
+        
+        expected_outputs = [False, True, True]
+        
+        f = lambda x : sol.isMatch(s=x.s, p=x.p)
+        
+        self.results_helper(f, inputs, expected_outputs)

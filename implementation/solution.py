@@ -1646,3 +1646,80 @@ class Solution:
             block_stack.push([i,h])
         
         return water
+    
+    
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        """You are given an array of integers heights where heights[i] represents the height of a bar. 
+        The width of each bar is 1.
+        Return the area of the largest rectangle that can be formed among the bars.
+
+        Args:
+            heights (List[int]): list of bar heights
+
+        Returns:
+            int: largest rectangle area achievable
+        """
+        # We need to answer the following question for EACH bar:
+        # Where's the first bar to the left that's shorter than I am?
+        shorter_left = [-1 for _ in heights]
+        left_stack = Stack()
+        for i,h in enumerate(heights):
+            while len(left_stack) > 0 and left_stack.peek()[1] >= h:
+                left_stack.pop()
+            if len(left_stack) > 0:
+                # ran into a shorter block than this one to the left
+                shorter_left[i] = left_stack.peek()[0]
+            left_stack.push((i,h))
+            
+        # Now we need to answer this next question for EACH bar:
+        # Where's the first bar to the right that's shorter than I am?
+        shorter_right = [len(heights) for _ in heights]
+        right_stack = Stack()
+        for i in range(len(heights)-1,-1,-1):
+            h = heights[i]
+            while len(right_stack) > 0 and right_stack.peek()[1] >= h:
+                right_stack.pop()
+            if len(right_stack) > 0:
+                # ran into a shorter block than this one to the right
+                shorter_right[i] = right_stack.peek()[0]
+            right_stack.push((i,h))
+            
+        # Finally, we can look at each rectangle heigh and expand it as far left and right as possible
+        record = 0
+        for i, h in enumerate(heights):
+            left_bound = shorter_left[i]
+            right_bound = shorter_right[i]
+            record = max(record, h * (right_bound - left_bound - 1))
+            
+        return record
+    
+    
+    def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
+        """You are given a 2-D grid of integers matrix, where each integer is greater than or equal to 0.
+        Return the length of the longest strictly increasing path within matrix.
+        From each cell within the path, you can move either horizontally or vertically. 
+        You may not move diagonally.
+
+        Args:
+            matrix (List[List[int]]): matrix of numbers
+
+        Returns:
+            int: longest increasing path achievable
+        """
+        pass
+    
+    
+    def isMatch(self, s: str, p: str) -> bool:
+        """You are given an input string s consisting of lowercase english letters, and a pattern p consisting of lowercase english letters, as well as '.', and '*' characters.
+        Return true if the pattern matches the entire input string, otherwise return false.
+        '.' Matches any single character
+        '*' Matches zero or more of the preceding element.
+
+        Args:
+            s (str): string to match
+            p (str): pattern to determine if can match s
+
+        Returns:
+            bool: whether p matches s
+        """
+        pass
