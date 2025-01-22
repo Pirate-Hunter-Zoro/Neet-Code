@@ -1706,7 +1706,32 @@ class Solution:
         Returns:
             int: longest increasing path achievable
         """
-        pass
+        record = 1
+        cells = []
+        for row in range(len(matrix)):
+            for col in range(len(matrix[row])):
+                cells.append((row,col))
+        cells.sort(key=lambda cell : matrix[cell[0]][cell[1]])
+        
+        records = [[1 for _ in range(len(matrix[i]))] for i in range(len(matrix))]
+        for cell in cells[1:]: # the lowest cell will only have a value of 1 anyway
+            r = cell[0]
+            c = cell[1]
+            if r > 0 and matrix[r-1][c] < matrix[r][c]:
+                # look up
+                records[r][c] = max(records[r][c], 1 + records[r-1][c])
+            if r < len(matrix)-1 and matrix[r+1][c] < matrix[r][c]:
+                # look down
+                records[r][c] = max(records[r][c], 1 + records[r+1][c])
+            if c > 0 and matrix[r][c-1] < matrix[r][c]:
+                # look left
+                records[r][c] = max(records[r][c], 1 + records[r][c-1])
+            if c < len(matrix[r])-1 and matrix[r][c+1] < matrix[r][c]:
+                # look right
+                records[r][c] = max(records[r][c], 1 + records[r][c+1])
+            record = max(record, records[r][c])
+        
+        return record
     
     
     def isMatch(self, s: str, p: str) -> bool:
@@ -1722,4 +1747,34 @@ class Solution:
         Returns:
             bool: whether p matches s
         """
-        pass
+        sols = [[None for _ in range(len(p))] for _ in range(len(s))]
+        
+        def solveIsMatch(i, j):
+            if j < 0: # ran out of p to match with
+                return i < 0 # ensure we also ran out of s
+            if sols[i][j] == None:
+                # need to solve this problem
+                if i == 0 and j == 0:
+                    sols[i][j] = (s[0] == p[0]) or (p[0] == '.')
+                elif i == 0: # only chance is to have a '*' to plow through
+                    sols[i][j] = p[j] == '*' and (solveIsMatch(i-1, j-2) or solveIsMatch(i, j-2))
+                elif j == 0:
+                    sols[i][j] = False
+                else:
+                    # both length greater than or equal to 2
+                    sols[i][j] = False
+                    if s[i] == p[j] or p[j] == '.':
+                        # try matching
+                        sols[i][j] = sols[i][j] or solveIsMatch(i-1,j-1)
+                    elif p[j] == '*':
+                        # if you can match the preceding character...
+                        if s[i] == p[j-1] or p[j-1] == '.':
+                            # try matching once
+                            sols[i][j] = sols[i][j] or solveIsMatch(i-1,j-2)
+                            # try matching more than once
+                            sols[i][j] = sols[i][j] or solveIsMatch(i-1,j)
+                        # try not matching
+                        sols[i][j] = sols[i][j] or solveIsMatch(i,j-2)
+            return sols[i][j]
+        
+        return solveIsMatch(len(s)-1, len(p)-1)

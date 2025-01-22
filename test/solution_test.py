@@ -619,9 +619,9 @@ class SolutionTest(unittest.TestCase):
                 self.s = s
                 self.p = p
                 
-        inputs = [Input(s = "aa", p = ".b"), Input(s = "nnn", p = "n*"), Input(s = "xyz", p = ".*z")]
+        inputs = [Input(s = "aa", p = ".b"), Input(s = "nnn", p = "n*"), Input(s = "xyz", p = ".*z"), Input(s="aaa", p="ab*ac*a")]
         
-        expected_outputs = [False, True, True]
+        expected_outputs = [False, True, True, True]
         
         f = lambda x : sol.isMatch(s=x.s, p=x.p)
         
