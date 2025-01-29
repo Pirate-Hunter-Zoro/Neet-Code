@@ -9,10 +9,10 @@ This will create a folder called "Neet-Code" in your current folder.
 2. Navigate into this folder.<br>
    ```cd Neet-Code```
 3. Create a python virtual environment named "neet-code-env" (or whatever you want to call it) via the following commands:<br>
-   ```pyenv install 3.10```
+   ```pyenv install 3.10```<br>
    ```pyenv virtualenv 3.10 neet-code-env```
-4. Move the virtual environment to this directory:
-   ```~/.pyenv/versions/3.10.16/envs/neet-code-env .```
+4. Move the virtual environment to this directory:<br>
+   ```mv ~/.pyenv/versions/3.10.16/envs/neet-code-env .```
 5. Activate the virtual environment:<br>
    ```source neet-code-env/bin/activate```
 6. Install the necessary Python libraries:<br>
