@@ -11,13 +11,11 @@ This will create a folder called "Neet-Code" in your current folder.
 3. Create a python virtual environment named "neet-code-env" (or whatever you want to call it) via the following commands:<br>
    ```pyenv install 3.10```<br>
    ```pyenv virtualenv 3.10 neet-code-env```
-4. Move the virtual environment to this directory:<br>
-   ```mv ~/.pyenv/versions/3.10.16/envs/neet-code-env .```
-5. Activate the virtual environment:<br>
-   ```source neet-code-env/bin/activate```
-6. Install the necessary Python libraries:<br>
+4. Activate the virtual environment:<br>
+   ```pyenv activate neet-code-env```
+5. Install the necessary Python libraries:<br>
    ```pip install -r requirements.txt```
-7. At this point, you should be able to allow VSCode to configure your Python tests and you can run them should you choose to!
+6. At this point, you should be able to allow VSCode to configure your Python tests and you can run them should you choose to!
 
 ## Useful Note
 To write all of the requirements in the Python virtual library into "requirements.txt", run the following command:<br>
